@@ -11,31 +11,31 @@
         #music-btn { position: fixed; top: 15px; right: 15px; z-index: 1000; background: white; border: 2px solid #ffb7c5; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; }
         #score { position: fixed; top: 15px; left: 15px; color: #ff8fa3; font-weight: bold; z-index: 1000; }
         
-        /* Countdown Overlay */
         #countdown-screen { display: none; font-size: 100px; color: #ff4d6d; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2000; font-weight: bold; text-shadow: 2px 2px 10px rgba(0,0,0,0.1); }
 
         .section { display: none; width: 90%; max-width: 400px; z-index: 100; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Balloons */
         .balloon { position: absolute; bottom: -100px; width: 50px; height: 70px; border-radius: 50%; cursor: pointer; animation: floatUp 4s linear forwards; }
         @keyframes floatUp { to { transform: translateY(-115vh); } }
 
-        /* Envelope & Letter */
         .envelope { width: 280px; height: 160px; background: #ffb7c5; border-radius: 0 0 10px 10px; position: relative; margin: 40px auto; }
         .envelope::before { content: ""; position: absolute; top: -80px; left: 0; border-left: 140px solid transparent; border-right: 140px solid transparent; border-bottom: 80px solid #ffccd5; }
         .letter { position: absolute; bottom: 5px; left: 10px; right: 10px; background: white; padding: 15px; border-radius: 5px; transition: 1s ease-in-out; font-size: 0.9rem; text-align: left; min-height: 120px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .open-letter { transform: translateY(-160px); z-index: 5 !important; }
 
-        /* Cake */
-        .cake-container { position: relative; width: 180px; height: 100px; margin: 40px auto; cursor: pointer; }
-        .cake-half { position: absolute; width: 90px; height: 90px; background: #ffccd5; transition: 1s; border-top: 10px solid #ffe5ec; }
-        .left-half { left: 0; border-radius: 15px 0 0 10px; border-right: 2px solid #ff8fa3; }
-        .right-half { right: 0; border-radius: 0 15px 10px 0; }
-        .cut .left-half { transform: translateX(-45px) rotate(-15deg); }
-        .cut .right-half { transform: translateX(45px) rotate(15deg); }
+        .cake-wrapper { position: relative; height: 150px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .birthday-button-cake { 
+            background: #ff4d6d; color: white; padding: 15px 30px; border-radius: 50px; 
+            font-weight: bold; transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3); 
+        }
+        .is-cake { width: 180px !important; height: 90px !important; border-radius: 10px 10px 0 0 !important; background: #ffccd5 !important; color: transparent !important; position: relative; }
+        .is-cake::before { content: "◕ ◡ ◕"; color: #ff4d6d; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 24px; color: black; }
+        .is-cake::after { content: "🕯️🕯️🕯️"; position: absolute; top: -35px; left: 50%; transform: translateX(-50%); font-size: 25px; animation: glow 1s infinite alternate; }
+        @keyframes glow { from { filter: drop-shadow(0 0 2px gold); } to { filter: drop-shadow(0 0 10px orange); } }
 
-        .btn-pookie { background: #ffb7c5; color: white; border: none; padding: 12px 25px; border-radius: 30px; cursor: pointer; margin-top: 15px; font-weight: bold; font-size: 1rem; box-shadow: 0 4px 10px rgba(255, 183, 197, 0.4); }
+        .btn-pookie { background: #ffb7c5; color: white; border: none; padding: 12px 25px; border-radius: 30px; cursor: pointer; margin-top: 10px; font-weight: bold; font-size: 1rem; width: 100%; box-shadow: 0 4px 10px rgba(255, 183, 197, 0.4); }
         #no-btn { position: absolute; background: #adb5bd; color: white; border: none; padding: 12px 25px; border-radius: 30px; cursor: pointer; transition: 0.1s; z-index: 1000; }
 
         .success-card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); border: 2px solid #ffccd5; }
@@ -53,12 +53,12 @@
 
     <div id="game-container">
         <div id="start-screen" class="section" style="display: block;">
-            <h1 style="color: #ff8fa3;">Aapke Liye Surprise! 🎀</h1>
+            <h1 style="color: #ff8fa3;">Surprise for Rasmalai 🎀</h1>
             <button class="btn-pookie" onclick="startGame()">Shuru Karein Aap 🐾</button>
         </div>
 
         <div id="pass-section" class="section">
-            <h2 style="color: #ff8fa3;">Secret Code Daaliye Aap 🔐</h2>
+            <h2 style="color: #ff8fa3;">Secret Code Daaliye 🔐</h2>
             <input type="text" id="pass-input" style="padding:12px; border-radius:10px; border:2px solid #ffb7c5; width: 70%;" placeholder="Hint: MeriRashmalai">
             <br><button class="btn-pookie" onclick="handlePassword()">Unlock ✨</button>
         </div>
@@ -67,25 +67,54 @@
             <div class="envelope">
                 <div class="letter" id="letter">
                     <div id="typewriter" style="white-space: pre-wrap;"></div>
-                    <button id="next-quiz" class="btn-pookie" style="display:none; width:100%; font-size:12px;" onclick="showQuiz()">Aage Badhiye 🐾</button>
+                    <button id="next-quiz" class="btn-pookie" style="display:none; font-size:12px;" onclick="showQuiz(1)">Aage Badhiye 🐾</button>
                 </div>
             </div>
         </div>
 
-        <div id="quiz-section" class="section">
-            <h2 style="color: #ff8fa3;">"Mera Favourite Kaun?" ❤️</h2>
-            <button class="btn-pookie" onclick="alert('Nooo! Phirse socho.')">Chocolate 🍫</button><br>
-            <button class="btn-pookie" onclick="showCake()">Aap (Rasmalai) 😍</button>
+        <div id="quiz-1" class="section">
+            <h2 style="color: #ff8fa3;">Level 1: Gussa Control ❤️</h2>
+            <p>Jab main bina wajah gussa dikhata hoon, toh mujhe kya chahiye hota hai?</p>
+            <button class="btn-pookie" onclick="alert('pitogi kiya kiss Krna 🤧😒💓')">Ek Thappad 😂</button>
+            <button class="btn-pookie" onclick="showQuiz(2)">Aapki pyari si kiss aur photo 💓</button>
+            <button class="btn-pookie" onclick="alert('Bhookh nahi lagi hai! 😜')">Khana 🍕</button>
+        </div>
+
+        <div id="quiz-2" class="section">
+            <h2 style="color: #ff8fa3;">Level 2: Eye Contact 👀</h2>
+            <p>Agar main aapko bohot der tak ghoorta rahoon, toh aap kya karengi?</p>
+            <button class="btn-pookie" onclick="alert('pitogi kiya kiss Krna 🤧😒💓')">Ek thappad lagaungi 😂</button>
+            <button class="btn-pookie" onclick="showQuiz(3)">kiss kar lungi jii 😭💓😂</button>
+            <button class="btn-pookie" onclick="alert('pitogi kiya kiss Krna 🤧😒💓')">Bolengi - Kya dekh rahe ho bhoot?</button>
+        </div>
+
+        <div id="quiz-3" class="section">
+            <h2 style="color: #ff8fa3;">Level 3: Nazar ✨</h2>
+            <p>Mera din kharab ho aur aap samne aa jao, toh kya hota hai?</p>
+            <button class="btn-pookie" onclick="alert('pitogi kiya kiss Krna 🤧😒💓')">Main aur chid jata hoon</button>
+            <button class="btn-pookie" onclick="showQuiz(4)">Saari tension bhool kar chehre par smile aa jati hai ❤️</button>
+        </div>
+
+        <div id="quiz-4" class="section">
+            <h2 style="color: #ff8fa3;">Level 4: Haq 🎀</h2>
+            <p>Duniya ki sabse khoobsurat ladki kaun hai mere liye?</p>
+            <button class="btn-pookie" onclick="alert('pitogi kiya kiss Krna 🤧😒💓')">Koi Heroine</button>
+            <button class="btn-pookie" onclick="showQuiz(5)">Jo abhi ye sawal padh rahi hai (Meri Rasmalai) ❤️</button>
+        </div>
+
+        <div id="quiz-5" class="section">
+            <h2 style="color: #ff8fa3;">Final Question ❤️</h2>
+            <p>Aap mere liye kya ho?</p>
+            <button class="btn-pookie" onclick="alert('pitogi kiya kiss Krna 🤧😒💓')">Sirf Ek Dost</button>
+            <button class="btn-pookie" onclick="showCake()">Meri sabse pyaari Rasmalai aur meri life ❤️</button>
         </div>
 
         <div id="cake-section" class="section">
-            <h2 style="color: #ff8fa3;">Cake Kaatiye Aap! 🍰</h2>
-            <div class="cake-container" id="cake-box" onclick="cutCake()">
-                <div class="cake-half left-half"></div>
-                <div class="cake-half right-half"></div>
-                <div style="position:absolute; top:-25px; left:44%; font-size:30px;">🕯️</div>
+            <h2 style="color: #ff8fa3;">Magic Dekhiye! ✨</h2>
+            <div class="cake-wrapper" id="cake-container" onclick="transformToCake()">
+                <div id="cake-button" class="birthday-button-cake">Happy Birthday!</div>
             </div>
-            <button class="btn-pookie" id="to-trap" style="display:none; margin-top: 20px;" onclick="showTrap()">Next Piece... 😉</button>
+            <button class="btn-pookie" id="to-trap" style="display:none; margin-top: 50px;" onclick="showTrap()">Next Piece... 😉</button>
         </div>
 
         <div id="love-trap" class="section">
@@ -156,8 +185,7 @@
                 c--; 
                 if(c > 0) { cd.innerHTML = c; }
                 else { 
-                    clearInterval(timer); 
-                    cd.style.display = 'none'; 
+                    clearInterval(timer); cd.style.display = 'none'; 
                     document.getElementById('letter-wrapper').style.display = 'block';
                     setTimeout(startTypewriter, 500);
                 }
@@ -166,7 +194,7 @@
 
         function startTypewriter() {
             document.getElementById('letter').classList.add('open-letter');
-            const text = "Happy Birthday, Rasmalai Aap! 🎈\n\nAaj aapka din hai, toh khoob enjoy kijiye. Aap jaisi hain, bilkul perfect hain. ❤️";
+            const text = "Happy Birthday, Rasmalai Aap! 🎈\n\nAaj aapka din hai. Aap jaisi hain, bilkul perfect hain. ❤️";
             let i = 0;
             function type() {
                 if (i < text.length) {
@@ -177,25 +205,26 @@
             type();
         }
 
-        function showQuiz() { 
-            document.getElementById('letter-wrapper').style.display = 'none'; 
-            document.getElementById('quiz-section').style.display = 'block'; 
+        function showQuiz(num) {
+            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+            document.getElementById('quiz-' + num).style.display = 'block';
         }
 
-        function showCake() { 
-            document.getElementById('quiz-section').style.display = 'none'; 
-            document.getElementById('cake-section').style.display = 'block'; 
+        function showCake() {
+            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+            document.getElementById('cake-section').style.display = 'block';
         }
-
-        function cutCake() { 
-            document.getElementById('cake-box').classList.add('cut'); 
-            document.getElementById('to-trap').style.display = 'block'; 
+        
+        function transformToCake() {
+            const btn = document.getElementById('cake-button');
+            btn.classList.add('is-cake'); 
+            setTimeout(() => { document.getElementById('to-trap').style.display = 'block'; }, 1000);
         }
 
         function showTrap() { 
             document.getElementById('cake-section').style.display = 'none'; 
             document.getElementById('love-trap').style.display = 'block'; 
-            moveNo(); // Initial position for NO button
+            moveNo();
         }
         
         function moveNo() { 
@@ -228,4 +257,5 @@
         }
     </script>
 </body>
-</html>
+                    </html>
+                    
